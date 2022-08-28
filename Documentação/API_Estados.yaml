@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: API Estados Brasileiros
+  description: Essa API recebe o nome dos estados brasileiros, bem como sua capital, população, área e região a qual pertence.
+  version: 1.0.0
+  contact:
+    email: francielle.sales.pb@compass.com.br
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+tags:
+  - name: API
+    description: Endpoints da API
+servers:
+  - url: http://localhost:1808/api/
+    description: API Estados Brasileiros
+    
+paths:
+  /states:
+    post:
+      summary: Inclui um novo estado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                regions:
+                  type: string
+                population:
+                  type: number
+                capital:
+                  type: string
+                area:
+                  type: number
+      responses:
+        '201':
+          $ref: '#/components/responses/State'
+    get:
+      summary: Devolve os estados cadastrados
+      responses:
+        '200':
+          $ref: '#/components/responses/States'
+
+  /states/:
+    get:
+      summary: Filtra por região, população e área
+      parameters:
+        - name: regions
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: sort
+          in: query
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/States'
+          
+  /states/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: number
+        required: true
+    get:
+      summary: Procura estado pelo ID
+      responses:
+        '200':
+          $ref: '#/components/responses/State'
+    put:
+      summary: Atualiza estado pelo ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                regions:
+                  type: string
+                population:
+                  type: number
+                capital:
+                  type: string
+                area:
+                  type: number
+      responses:
+        '200':
+          $ref: '#/components/responses/State'
+    delete:
+      summary: Deleta um estado pelo ID
+      responses:
+        '200':
+          $ref: '#/components/responses/State'
+          
+components:
+  schemas:
+    State:
+      type: object
+      title: State
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        regions:
+          type: string
+        population:
+          type: number
+        capital:
+          type: string
+        area:
+          type: number
+          
+  responses:
+    State:
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              regions:
+                type: string
+              population:
+                type: number
+              capital:
+                type: string
+              area:
+                type: number
+                
+    States:
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/State'
